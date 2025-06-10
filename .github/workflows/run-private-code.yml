@@ -1,0 +1,27 @@
+name: Run Private Python Script
+
+on:
+  workflow_dispatch:  # Manually trigger from GitHub UI
+
+jobs:
+  run-private-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout public repo
+        uses: actions/checkout@v4
+
+      - name: Clone private repo
+        env:
+          TOKEN: ${{ secrets.PAT }}
+        run: |
+          git clone https://x-access-token:${TOKEN}@github.com/Abdul-Nihal/private.git private_repo
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run Python file
+        run: |
+          python private_repo/main.py
